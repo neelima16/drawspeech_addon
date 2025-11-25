@@ -1,6 +1,6 @@
 
 # DrawSpeech: Expressive Speech Synthesis Using Prosodic Sketches as Control Conditions
-This paper was submitted to ICASSP 2025.
+ICASSP 2025 [[Paper]](https://ieeexplore.ieee.org/abstract/document/10889767) [[arXiv]](https://arxiv.org/abs/2501.04256)
 
 ## Status
 This project is currently under active development. We are continuously updating and improving it, with more usage details and features to be released in the future.
@@ -19,8 +19,8 @@ data/dataset/LJSpeech-1.1
  ┣ README
 ```
 2. Download the alignments of the LJSpeech dataset [LJSpeech.zip](https://drive.google.com/drive/folders/1DBRkALpPd6FL9gjHMmMEdHODmkgNIIK4). You have to unzip the files in `data/dataset/LJSpeech-1.1`
-3. Download checkpoints (Coming Soon)
-4. Uncompress the checkpoint tar file and place the content into **data/checkpoints/**
+3. Download checkpoints from [HuggingFace](https://huggingface.co/HappyColor/DrawSpeech/tree/main).
+4. Place the checkpoints into **data/checkpoints/**
 
 ## Preprocessing
 ```python
@@ -57,7 +57,20 @@ CUDA_VISIBLE_DEVICES=0 python drawspeech/infer.py --config_yaml drawspeech/confi
 
 ## Acknowledgement
 This repository borrows codes from the following repos. Many thanks to the authors for their great work.  
-AudioLDM: https://github.com/haoheliu/AudioLDM-training-finetuning?tab=readme-ov-file#prepare-python-running-environment  
-FastSpeech 2: https://github.com/ming024/FastSpeech2  
-HiFi-GAN: https://github.com/jik876/hifi-gan  
+* [AudioLDM](https://github.com/haoheliu/AudioLDM-training-finetuning?tab=readme-ov-file#prepare-python-running-environment)
+* [FastSpeech 2](https://github.com/ming024/FastSpeech2) 
+* [HiFi-GAN](https://github.com/jik876/hifi-gan)
 
+## Citation
+```bibtex
+@INPROCEEDINGS{10889767,
+  author={Chen, Weidong and Yang, Shan and Li, Guangzhi and Wu, Xixin},
+  booktitle={ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={DrawSpeech: Expressive Speech Synthesis Using Prosodic Sketches as Control Conditions}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-5},
+  doi={10.1109/ICASSP49660.2025.10889767}}
+}
+```
