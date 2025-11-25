@@ -1,6 +1,6 @@
 
 # DrawSpeech: Expressive Speech Synthesis Using Prosodic Sketches as Control Conditions
-ICASSP 2025 [[Paper]](https://ieeexplore.ieee.org/abstract/document/10889767) [[arXiv]](https://arxiv.org/abs/2501.04256)
+ICASSP 2025 [[Paper]](https://ieeexplore.ieee.org/abstract/document/10889767) [[arXiv]](https://arxiv.org/abs/2501.04256) [[Demo]](https://happycolor.github.io/DrawSpeech/)
 
 ## Status
 This project is currently under active development. We are continuously updating and improving it, with more usage details and features to be released in the future.
@@ -56,7 +56,7 @@ CUDA_VISIBLE_DEVICES=0 python drawspeech/infer.py --config_yaml drawspeech/confi
 ```
 
 ## Acknowledgement
-This repository borrows codes from the following repos. Many thanks to the authors for their great work.  
+This repository borrows codes from the following repos. Many thanks to the authors for their great work.
 * [AudioLDM](https://github.com/haoheliu/AudioLDM-training-finetuning?tab=readme-ov-file#prepare-python-running-environment)
 * [FastSpeech 2](https://github.com/ming024/FastSpeech2) 
 * [HiFi-GAN](https://github.com/jik876/hifi-gan)
