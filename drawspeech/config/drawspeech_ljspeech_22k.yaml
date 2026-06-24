@@ -60,7 +60,7 @@ model:
       base_learning_rate: 8.0e-06
       target: drawspeech.modules.latent_encoder.autoencoder.AutoencoderKL
       params: 
-        reload_from_ckpt: "log/latent_diffusion/vae_ljspeech_22k/checkpoints/checkpoint-79999.ckpt"
+        reload_from_ckpt: "data/checkpoints/vae.ckpt"
         sampling_rate: *sampling_rate
         batchsize: 4
         monitor: val/rec_loss   # actually we use global_step

@@ -250,7 +250,7 @@ class TextEncoderwithVarianceAdaptor(nn.Module):
         if self.training:
             _mel_mask = ~mel_mask.bool()
         elif self.infer:
-            _mel_mask = None
+            _mel_mask = torch.zeros_like(mel_mask).bool()
             pitch = pitch if isinstance(pitch, torch.Tensor) else None
             pitch_sketch = pitch_sketch if isinstance(pitch_sketch, torch.Tensor) else None
             pitch_length = pitch_length if isinstance(pitch_length, torch.Tensor) else None
@@ -262,7 +262,7 @@ class TextEncoderwithVarianceAdaptor(nn.Module):
             print(f"Given pitch: {pitch is not None} | " + f"Given energy: {energy is not None} | " + f"Given phoneme_duration: {phoneme_duration is not None}")
         else:
             # under validation
-            _mel_mask = None
+            _mel_mask = torch.zeros_like(mel_mask).bool()
             pitch = None
             pitch_sketch = None
             pitch_length = None

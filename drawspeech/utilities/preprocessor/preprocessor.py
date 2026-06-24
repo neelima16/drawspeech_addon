@@ -66,6 +66,12 @@ class Preprocessor:
         pitch_scaler = StandardScaler()
         energy_scaler = StandardScaler()
 
+        #Neelima Change
+        pitch = []
+        energy = []
+        n=0
+        #till here
+
         # Compute pitch, energy, duration, and mel-spectrogram        
         speaker = "LJSpeech"
         for wav_name in tqdm(os.listdir(self.in_dir)):

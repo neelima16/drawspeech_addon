@@ -21,3 +21,16 @@ temp.py
 temp
 tests
 test.yaml
+data/dataset/
+data/checkpoints/
+log/
+__pycache__/
+*.pyc
+.conda/
+.drawspeech_env/
+*.ckpt
+*.pth
+*.tar.bz2
+*.zip
+tests/inference.json
+*.npy

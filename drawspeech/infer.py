@@ -90,7 +90,7 @@ def infer(dataset_json, configs, config_yaml_path, exp_group_name, exp_name):
     ]
 
     checkpoint = torch.load(resume_from_checkpoint)
-    latent_diffusion.load_state_dict(checkpoint["state_dict"])
+    latent_diffusion.load_state_dict(checkpoint.get("state_dict", checkpoint))
 
     latent_diffusion = set_cond_infer_mode(latent_diffusion)
     
