@@ -1,5 +1,5 @@
 
-# DrawSpeech Reproduction – Minimum Reproducible Pipeline
+# DrawSpeech Reproduction – Minimum Reproducible Pipeline (USE HPC)
 
 This repository contains a fully reproducible pipeline for the
 [DrawSpeech](https://github.com/HappyColor/DrawSpeech_PyTorch) expressive
@@ -21,6 +21,8 @@ evaluation) is also supported.
 
 2. **Create the conda environment and install dependencies**
    ```bash
+   module load Python
+   module avail conda
    conda create -n drawspeech python=3.10 -y
    conda activate drawspeech
    pip install -r requirements.txt
