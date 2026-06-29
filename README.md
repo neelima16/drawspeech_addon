@@ -84,6 +84,29 @@ streamlit run app.py --server.port 8501
 
 Then create an SSH tunnel from your local machine and open `http://localhost:8502`.
 
+(Note: From your local computer, run:
+
+ssh -L 8501:localhost:8501 <username>@<login-node>
+
+or, if the Streamlit app is on a compute node (e.g. tg091):
+
+ssh -L 8501:tg091:8501 <username>@<login-node>
+
+For example, if your username is iwi5408h:
+
+ssh -L 8501:tg091:8501 iwi5408h@csnhr.nhr.fau.de
+
+Then open:
+
+http://localhost:8501
+
+in your browser.
+
+If you started Streamlit like this
+streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+
+then the port forwarding above is what lets you access it on your own computer.)
+
 ---
 
 ## Modifications made to the original code
