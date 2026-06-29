@@ -81,6 +81,7 @@ These results closely match the paper’s reported values (62 Hz for cross‑u
 An interactive Streamlit app lets you **draw pitch sketches** or use **word/phoneme sliders** and hear the result in real time. The app is still being polished, but you can test it on a GPU node:
 
 ```bash
+export PYTHONPATH=$(pwd):$(pwd)/taming-transformers:$PYTHONPATH
 streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
 
