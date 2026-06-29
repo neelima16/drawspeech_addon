@@ -1,0 +1,124 @@
+{
+  "data": [
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ003-0040.wav",
+      "transcription": "The evils of association for these debtors were perpetuated, although the plan provided for the separation of the various contingents committed to it.",
+      "phonemes": "{DH AH0   IY1 V AH0 L Z   AH1 V   AH0 S OW2 S IY0 EY1 SH AH0 N   F AO1 R   DH IY1 Z   D EH1 T ER0 Z   W ER0   P ER0 P EH1 CH AH0 W EY2 T IH0 D   ,   AO2 L DH OW1   DH AH0   P L AE1 N   P R AH0 V AY1 D AH0 D   F AO1 R   DH AH0   S EH2 P ER0 EY1 SH AH0 N   AH1 V   DH AH0   V EH1 R IY0 AH0 S   K AH0 N T IH1 N JH AH0 N T S   K AH0 M IH1 T AH0 D   T UW1   IH1 T   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ003-0040.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ003-0040.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ006-0014.wav",
+      "transcription": "They should be persons, he thought, selected from the highest class; the duty was most important,",
+      "phonemes": "{DH EY1   SH UH1 D   B IY1   P ER1 S AH0 N Z   ,   HH IY1   TH AO1 T   ,   S AH0 L EH1 K T AH0 D   F R AH1 M   DH AH0   HH AY1 AH0 S T   K L AE1 S   DH AH0   D UW1 T IY0   W AA1 Z   M OW1 S T   IH0 M P AO1 R T AH0 N T   ,}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ006-0014.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ006-0014.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ009-0239.wav",
+      "transcription": "The whole case was referred to the king, and the poor wretch, whose crime had been a military one, was eventually pardoned.",
+      "phonemes": "{DH AH0   HH OW1 L   K EY1 S   W AA1 Z   R AH0 F ER1 D   T UW1   DH AH0   K IH1 NG   ,   AH0 N D   DH AH0   P UH1 R   R EH1 CH   ,   HH UW1 Z   K R AY1 M   HH AE1 D   B IH1 N   AH0   M IH1 L AH0 T EH2 R IY0   W AH1 N   ,   W AA1 Z   IH0 V EH1 N CH AH0 W AH0 L IY0   P AA1 R D AH0 N D   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ009-0239.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ009-0239.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ011-0169.wav",
+      "transcription": "Miss Turner, not knowing him, would have left the room, but he said he came from her father, and she remained.",
+      "phonemes": "{M IH1 S   T ER1 N ER0   ,   N AA1 T   N OW1 IH0 NG   HH IH1 M   ,   W UH1 D   HH AE1 V   L EH1 F T   DH AH0   R UW1 M   ,   B AH1 T   HH IY1   S EH1 D   HH IY1   K EY1 M   F R AH1 M   HH ER0   F AA1 DH ER0   ,   AH0 N D   SH IY1   R IH0 M EY1 N D   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ011-0169.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ011-0169.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ012-0093.wav",
+      "transcription": "and the police were unable at first to get on the track of the thieves.",
+      "phonemes": "{AH0 N D   DH AH0   P AH0 L IY1 S   W ER0   AH0 N EY1 B AH0 L   AE1 T   F ER1 S T   T UW1   G EH1 T   AA1 N   DH AH0   T R AE1 K   AH1 V   DH AH0   TH IY1 V Z   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ012-0093.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ012-0093.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ013-0220.wav",
+      "transcription": "that Courvoisier was idle, discontented, ready to take offense, greedy of gain;",
+      "phonemes": "{DH AE1 T   K AO2 R V OY1 S ER0 IY0   W AA1 Z   AY1 D AH0 L   ,   D IH2 S K AH0 N T EH1 N T IH0 D   ,   R EH1 D IY0   T UW1   T EY1 K   AH0 F EH1 N S   ,   G R IY1 D IY0   AH1 V   G EY1 N}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ013-0220.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ013-0220.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ028-0388.wav",
+      "transcription": "The old walls were restored to a height sufficient to prevent the escape of the animals, and among the ruins the kings enjoyed their favorite sport.",
+      "phonemes": "{DH AH0   OW1 L D   W AO1 L Z   W ER0   R IH0 S T AO1 R D   T UW1   AH0   HH AY1 T   S AH0 F IH1 SH AH0 N T   T UW1   P R IH0 V EH1 N T   DH AH0   IH0 S K EY1 P   AH1 V   DH AH0   AE1 N AH0 M AH0 L Z   ,   AH0 N D   AH0 M AH1 NG   DH AH0   R UW1 AH0 N Z   DH AH0   K IH1 NG Z   EH0 N JH OY1 D   DH EH1 R   F EY1 V ER0 IH0 T   S P AO1 R T   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ028-0388.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ028-0388.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ039-0136.wav",
+      "transcription": "After he left the Marines and before departing for Russia, Oswald, his brother, and a third companion went hunting for squirrels and rabbits.",
+      "phonemes": "{AE1 F T ER0   HH IY1   L EH1 F T   DH AH0   M ER0 IY1 N Z   AH0 N D   B IH0 F AO1 R   D IH0 P AA1 R T IH0 NG   F AO1 R   R AH1 SH AH0   ,   AO1 Z W AO0 L D   ,   HH IH1 Z   B R AH1 DH ER0   ,   AH0 N D   AH0   TH ER1 D   K AH0 M P AE1 N Y AH0 N   W EH1 N T   HH AH1 N T IH0 NG   F AO1 R   S K W ER1 AH0 L Z   AH0 N D   R AE1 B AH0 T S   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ039-0136.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ039-0136.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ042-0228.wav",
+      "transcription": "I went there to see the land, the people and how their system works, end quote.",
+      "phonemes": "{AY1   W EH1 N T   DH EH1 R   T UW1   S IY1   DH AH0   L AE1 N D   ,   DH AH0   P IY1 P AH0 L   AH0 N D   HH AW1   DH EH1 R   S IH1 S T AH0 M   W ER1 K S   ,   EH1 N D   K W OW1 T   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ042-0228.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ042-0228.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    },
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ050-0082.wav",
+      "transcription": "the interest of the Secret Service goes beyond information on individuals or groups threatening to cause harm or embarrassment to the President.",
+      "phonemes": "{DH AH0   IH1 N T R AH0 S T   AH1 V   DH AH0   S IY1 K R AH0 T   S ER1 V AH0 S   G OW1 Z   B IH0 AA1 N D   IH2 N F ER0 M EY1 SH AH0 N   AA1 N   IH2 N D AH0 V IH1 JH AH0 W AH0 L Z   AO1 R   G R UW1 P S   TH R EH1 T AH0 N IH0 NG   T UW1   K AA1 Z   HH AA1 R M   AO1 R   IH0 M B EH1 R AH0 S M AH0 N T   T UW1   DH AH0   P R EH1 Z AH0 D EH2 N T   .}",
+      "pitch_sketch": "mini_demo/features/phoneme_level/pitch/LJSpeech-pitch-LJ050-0082.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ050-0082.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    }
+  ]
+}

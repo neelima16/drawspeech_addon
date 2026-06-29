@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "wav": "mini_demo/LJSpeech-1.1/wavs/LJ003-0040.wav",
+      "transcription": "The evils of association for these debtors were perpetuated, although the plan provided for the separation of the various contingents committed to it.",
+      "phonemes": "{DH AH0   IY1 V AH0 L Z   AH1 V   AH0 S OW2 S IY0 EY1 SH AH0 N   F AO1 R   DH IY1 Z   D EH1 T ER0 Z   W ER0   P ER0 P EH1 CH AH0 W EY2 T IH0 D   ,   AO2 L DH OW1   DH AH0   P L AE1 N   P R AH0 V AY1 D AH0 D   F AO1 R   DH AH0   S EH2 P ER0 EY1 SH AH0 N   AH1 V   DH AH0   V EH1 R IY0 AH0 S   K AH0 N T IH1 N JH AH0 N T S   K AH0 M IH1 T AH0 D   T UW1   IH1 T   .}",
+      "pitch_sketch": "mini_demo/features/cross_sketches/LJ003-0040_from_LJ013-0220_sketch.npy",
+      "energy_sketch": "mini_demo/features/phoneme_level/energy/LJSpeech-energy-LJ003-0040.npy",
+      "pitch": "",
+      "energy": "",
+      "duration": null,
+      "pitch_length": null,
+      "energy_length": null
+    }
+  ]
+}

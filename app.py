@@ -7,6 +7,7 @@ import glob
 import time
 import tempfile
 import numpy as np
+import pandas as pd 
 import librosa
 import pyworld as pw
 from g2p_en import G2p
@@ -15,9 +16,6 @@ from torch.utils.data import DataLoader
 from streamlit_drawable_canvas import st_canvas
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
-from PIL import Image, ImageDraw, ImageFont
-import base64
-import io
 from drawspeech.utilities.model_util import instantiate_from_config
 from drawspeech.utilities.data.dataset import AudioDataset
 
@@ -48,9 +46,13 @@ def load_model(config_yaml_path, checkpoint_path):
 
 
 # -------------------- 2. Synthesis --------------------
-def synthesize(model, config, text, pitch_sketch, energy_sketch, duration=None):
-    g2p = G2p()
-    phones = g2p(text)
+def synthesize(model, config, text, pitch_sketch, energy_sketch, duration=None, phones_list=None):
+    # Use precomputed phones if provided, else recompute
+    if phones_list is None:
+        g2p = G2p()
+        phones = g2p(text)
+    else:
+        phones = phones_list
     phoneme_str = "{" + " ".join(phones) + "}"
     n_phones = len(phones)
 
@@ -201,33 +203,39 @@ def main():
     phones = g2p(text)
     n_phones = len(phones)
 
+    # Split into words and compute phoneme counts per word using silence markers
     words = text.split()
-    word_phones = [len(g2p(word)) for word in words]
-    if sum(word_phones) != n_phones:
-        word_phones = [n_phones // len(words)] * len(words)
-        word_phones[-1] += n_phones - sum(word_phones)
+    silence_tokens = {'sp', 'spn', 'sil'}
+    word_phones = []
+    current_count = 0
+    for p in phones:
+        if p in silence_tokens:
+            if current_count > 0:
+                word_phones.append(current_count)
+                current_count = 0
+        else:
+            current_count += 1
+    if current_count > 0:
+        word_phones.append(current_count)
+
+    # Fallback if grouping doesn't match word count
+    if len(word_phones) != len(words):
+        word_phones = [len(g2p(word)) for word in words]
+        if sum(word_phones) != n_phones:
+            word_phones = [n_phones // len(words)] * len(words)
+            word_phones[-1] += n_phones - sum(word_phones)
 
     st.write(f"**Words:** {' | '.join(words)}")
     st.write(f"**Phonemes per word:** {dict(zip(words, word_phones))}")
 
     # ---- Choose input mode ----
     input_mode = st.radio(
-        "Input mode:",
-        ["Sketch", "Word sliders", "Phoneme sliders"],
-        horizontal=True
-    )
+    "Input mode:",
+    ["Word Sketch", "Word Curve", "Phoneme Sketch", "Phoneme Curve", "Editable Table"],
+    horizontal=True
+)
 
     pitch_sketch = None
-
-        # ---- Choose input mode ----
-    input_mode = st.radio(
-        "Input mode:",
-        ["Word Sketch", "Word Curve", "Phoneme Sketch", "Phoneme Curve"],
-        horizontal=True
-    )
-
-    pitch_sketch = None
-    canvas_width = 600   # default for word-level sketches
 
     if input_mode == "Word Sketch":
         st.subheader("Pitch Sketch (over words)")
@@ -238,7 +246,7 @@ def main():
             stroke_width=2,
             stroke_color="#0000FF",
             height=200,
-            width=canvas_width,
+            width=600,
             drawing_mode="freedraw",
             key="pitch_word_sketch",
             update_streamlit=True,
@@ -246,7 +254,7 @@ def main():
 
         # Word‑aligned x‑axis guide
         total_phones = sum(word_phones)
-        guide_html = f'<div style="display:flex; width:{canvas_width}px; margin-top:5px;">'
+        guide_html = '<div style="display:flex; width:600px; margin-top:5px;">'
         for i, (word, count) in enumerate(zip(words, word_phones)):
             width_pct = (count / total_phones) * 100
             border_style = "border-left: 1px dashed gray;" if i > 0 else ""
@@ -269,12 +277,10 @@ def main():
                 word_values.append(val)
 
         if word_values:
-            # Expand word values to phoneme length
             pitch_sketch = []
             for val, count in zip(word_values, word_phones):
                 pitch_sketch.extend([val] * count)
 
-            # Show a small line plot of the word values
             fig_word, ax_word = plt.subplots(figsize=(4, 1.5))
             ax_word.plot(word_values, marker='o')
             ax_word.set_xticks(range(len(words)))
@@ -285,9 +291,8 @@ def main():
 
     elif input_mode == "Phoneme Sketch":
         st.subheader("Pitch Sketch (over phonemes)")
-        st.caption("Draw a line from left to right. Each phoneme is labelled below.")
+        st.caption("Draw a line from left to right. Each phoneme is labelled below, grouped by words.")
 
-        # Wider canvas for many phonemes – up to 1200px, but limited by screen
         phoneme_canvas_width = min(1200, max(600, n_phones * 20))
         canvas_result = st_canvas(
             fill_color="rgba(255, 255, 255, 0)",
@@ -300,53 +305,121 @@ def main():
             update_streamlit=True,
         )
 
-        # Phoneme labels as a horizontal scrollable row (if too wide)
+        # Phoneme labels with word boundaries
         label_html = '<div style="overflow-x: auto; white-space: nowrap; margin-top:5px;">'
-        for i, phone in enumerate(phones):
-            label_html += f'<span style="display:inline-block; width:{max(20, phoneme_canvas_width//n_phones)}px; text-align:center; font-size:10px; border-right:1px solid #ddd;">{phone}</span>'
+        word_start_idx = 0
+        for word, count in zip(words, word_phones):
+            for j in range(count):
+                phone = phones[word_start_idx + j]
+                border_style = "border-left: 1px dashed #aaa;" if (j == 0 and word_start_idx > 0) else ""
+                width_px = max(20, phoneme_canvas_width // n_phones)
+                label_html += f'<span style="display:inline-block; width:{width_px}px; text-align:center; font-size:10px; {border_style}">{phone}</span>'
+            word_start_idx += count
         label_html += '</div>'
-        st.markdown(label_html, unsafe_allow_html=True)
+
+        # Word labels centered under phoneme groups
+        word_label_html = '<div style="overflow-x: auto; white-space: nowrap; margin-top:2px;">'
+        word_start_idx = 0
+        for word, count in zip(words, word_phones):
+            width_px = max(20, phoneme_canvas_width // n_phones) * count
+            word_label_html += f'<span style="display:inline-block; width:{width_px}px; text-align:center; font-size:10px; font-weight:bold; color:#555;">{word}</span>'
+            word_start_idx += count
+        word_label_html += '</div>'
+        st.markdown(label_html + word_label_html, unsafe_allow_html=True)
 
         if canvas_result.json_data is not None:
             pitch_sketch = drawing_to_sketch(canvas_result, n_phones)
 
     elif input_mode == "Phoneme Curve":
         st.subheader("Phoneme‑level sliders (displayed as a curve)")
-        st.caption("Set a pitch value for each phoneme.")
+        st.caption("Set a pitch value for each phoneme. Words are grouped and labeled below.")
 
         pitch_sketch = []
-        cols = st.columns(min(10, n_phones))
-        col_idx = 0
-        for i, phone in enumerate(phones):
-            if col_idx >= 10:
-                cols = st.columns(min(10, n_phones - i))
-                col_idx = 0
-            with cols[col_idx]:
-                val = st.slider(phone, 0.0, 1.0, 0.5, key=f"pc_{i}")
-                pitch_sketch.append(val)
-            col_idx += 1
+        word_start_idx = 0
+        for word, count in zip(words, word_phones):
+            st.markdown(f"**{word}**")
+            cols = st.columns(count)
+            for j, col in enumerate(cols):
+                idx = word_start_idx + j
+                with col:
+                    val = st.slider(phones[idx], 0.0, 1.0, 0.5, key=f"pc_{idx}")
+                    pitch_sketch.append(val)
+            word_start_idx += count
 
-        # Show a line plot of the phoneme values (optional, but nice)
         if pitch_sketch:
             fig_phon, ax_phon = plt.subplots(figsize=(6, 1.5))
             ax_phon.plot(pitch_sketch)
+            cum = 0
+            for count in word_phones:
+                if cum > 0:
+                    ax_phon.axvline(x=cum-0.5, color='gray', linestyle='--', linewidth=0.5)
+                cum += count
             ax_phon.set_ylim(0, 1)
             ax_phon.set_ylabel('Pitch')
             ax_phon.set_xlabel('Phoneme index')
             st.pyplot(fig_phon)
+    elif input_mode == "Editable Table":
+        st.subheader("Editable pitch table (one value per phoneme)")
+        st.caption("Type the desired pitch for each phoneme (0 = low, 1 = high). The plot updates automatically.")
+
+        # Build a DataFrame with initial neutral values
+        df = pd.DataFrame({
+            "Phoneme": phones,
+            "Pitch": [0.5] * n_phones
+        })
+
+        # Editable data editor
+        edited_df = st.data_editor(
+            df,
+            column_config={
+                "Pitch": st.column_config.NumberColumn(
+                    "Pitch",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,
+                    format="%.2f"
+                )
+            },
+            num_rows="fixed",
+            use_container_width=True,
+            key="pitch_table"
+        )
+
+        # Extract pitch sketch from the edited table
+        pitch_sketch = edited_df["Pitch"].tolist()
+
+        # Live plot of the current sketch
+        fig_table, ax_table = plt.subplots(figsize=(6, 1.5))
+        ax_table.plot(pitch_sketch, marker='o', markersize=4)
+        ax_table.set_ylim(0, 1)
+        ax_table.set_xlabel("Phoneme index")
+        ax_table.set_ylabel("Pitch")
+        st.pyplot(fig_table)
 
     # Neutral energy for now
     energy_sketch = [0.5] * n_phones
 
+    # ---- Preset buttons (optional but helpful) ----
+    st.subheader("Quick presets")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("Rising"):
+            pitch_sketch = list(np.linspace(0.2, 0.9, n_phones))
+    with col2:
+        if st.button("Falling"):
+            pitch_sketch = list(np.linspace(0.9, 0.2, n_phones))
+    with col3:
+        if st.button("Flat"):
+            pitch_sketch = [0.5] * n_phones
 
-    
     if st.button("Generate Speech"):
         if pitch_sketch is None:
             pitch_sketch = [0.5] * n_phones
 
         with st.spinner("Synthesizing..."):
             audio_path, used_pitch, used_energy = synthesize(
-                model, config, text, pitch_sketch, energy_sketch
+                model, config, text, pitch_sketch, energy_sketch,
+                phones_list=phones
             )
             if audio_path and os.path.exists(audio_path):
                 st.audio(audio_path)
@@ -363,10 +436,19 @@ def main():
                     rmse = np.sqrt(np.mean((sketch_arr - gen_arr)**2))
                     st.metric("Correlation (Pearson's r)", f"{corr:.3f}")
                     st.metric("RMSE (normalized)", f"{rmse:.4f}")
+                    st.caption(
+                        "This RMSE is on a 0–1 normalised pitch scale, not in Hz. "
+                        "The paper reports RMSE in Hz (~115 Hz on the test set)."
+                    )
 
                     fig, ax = plt.subplots(figsize=(8,3))
                     ax.plot(sketch_arr, label="Sketch", marker="o")
-                    ax.plot(gen_arr, label="Generated pitch (normalized)", marker="x")
+                    ax.plot(gen_arr, label="Generated pitch (norm.)", marker="x")
+                    cum = 0
+                    for count in word_phones:
+                        if cum > 0:
+                            ax.axvline(x=cum-0.5, color='gray', linestyle='--', linewidth=0.5)
+                        cum += count
                     ax.set_xlabel("Phoneme index")
                     ax.set_ylabel("Normalized pitch")
                     ax.legend()
