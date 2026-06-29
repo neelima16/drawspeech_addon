@@ -1,16 +1,17 @@
 
-```markdown
 # DrawSpeech Reproduction – Minimum Reproducible Pipeline
 
-This repository contains a fully reproducible mini‑pipeline for the
+This repository contains a fully reproducible pipeline for the
 [DrawSpeech](https://github.com/HappyColor/DrawSpeech_PyTorch) expressive
-text‑to‑speech system.  It includes all fixes needed for modern libraries,
-a **10‑recording mini‑dataset**, and automated scripts that reproduce the
-paper’s key experiments **in under one hour** (after checkpoints are downloaded).
+text‑to‑speech system. It includes all fixes needed for modern libraries,
+a **10‑recording mini‑dataset** for quick experiments, and automated scripts
+that reproduce the paper’s key results **in under one hour** (after checkpoints
+are downloaded). A full‑scale reproduction (300 test files, cross‑utterance
+evaluation) is also supported.
 
 ---
 
-## Quick start
+## Quick start (mini‑dataset, 10 recordings)
 
 1. **Clone the repository**
    ```bash
@@ -30,7 +31,7 @@ paper’s key experiments **in under one hour** (after checkpoints are downloade
    bash download_checkpoints.sh
    ```
 
-4. **Run the three experiments on the mini‑dataset (10 recordings)**
+4. **Run the three experiments**
    ```bash
    bash mini_demo/run_mini.sh phoneme   # reconstruction baseline
    bash mini_demo/run_mini.sh word      # word‑level smoothed sketch
@@ -75,43 +76,30 @@ These results closely match the paper’s reported values (62 Hz for cross‑u
 
 ## Interactive demo (work in progress)
 
-An interactive Streamlit app that lets you **draw pitch sketches** or use **word/phoneme sliders** and hear the result in real time is included as `app.py`.  
-It is still being polished, but you can run it on a GPU node with:
+An interactive Streamlit app lets you **draw pitch sketches** or use **word/phoneme sliders** and hear the result in real time. The app is still being polished, but you can test it on a GPU node:
 
 ```bash
-streamlit run app.py --server.port 8501
+streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 ```
 
-Then create an SSH tunnel from your local machine and open `http://localhost:8502`.
+Then, from your **local machine**, create an SSH tunnel. Replace `<GPU_HOST>` with the actual hostname of the GPU node (e.g., `tg090`), and `<LOGIN_NODE>` with your cluster's login address (e.g., `tinyx` or `csnhr.nhr.fau.de`):
 
-(Note: From your local computer, run:
+```bash
+ssh -L 8501:<GPU_HOST>:8501 <username>@<LOGIN_NODE>
+```
 
-ssh -L 8501:localhost:8501 <username>@<login-node>
+For example, if your username is `iwi5408h` and the GPU node is `tg090`:
 
-or, if the Streamlit app is on a compute node (e.g. tg091):
+```bash
+ssh -L 8501:tg090:8501 iwi5408h@csnhr.nhr.fau.de
+```
 
-ssh -L 8501:tg091:8501 <username>@<login-node>
-
-For example, if your username is iwi5408h:
-
-ssh -L 8501:tg091:8501 iwi5408h@csnhr.nhr.fau.de
-
-Then open:
-
-http://localhost:8501
-
-in your browser.
-
-If you started Streamlit like this
-streamlit run app.py --server.port 8501 --server.address 0.0.0.0
-
-then the port forwarding above is what lets you access it on your own computer.)
+Now open your browser and go to **http://localhost:8501**.  
+(If port 8501 is blocked locally, use `-L 8502:...` and open `http://localhost:8502`.)
 
 ---
 
 ## Modifications made to the original code
-
-The following files were altered to fix incompatibilities with newer Python/package versions and to extend the project:
 
 | File | Change | Reason |
 |------|--------|--------|
@@ -123,6 +111,71 @@ The following files were altered to fix incompatibilities with newer Python/pack
 | `drawspeech/config/drawspeech_ljspeech_22k.yaml` | Fixed corrupt `reload_from_ckpt` line | YAML parsing error |
 
 All modifications are clearly marked in the source files.
+
+---
+
+## Complete Pipeline (full dataset reproduction)
+
+If you want to reproduce the **full paper evaluation** on the entire LJSpeech test set (300 utterances), follow these steps.  
+This requires the full LJSpeech dataset (~2.6 GB) and about **2–4 hours** of preprocessing / inference.
+
+### 1. Download the full LJSpeech dataset
+```bash
+wget https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2
+tar -xjf LJSpeech-1.1.tar.bz2 -C data/dataset/
+```
+
+### 2. Download the TextGrid alignments
+Obtain the alignments from the [DrawSpeech repository](https://github.com/HappyColor/DrawSpeech_PyTorch) and place them under:
+```
+data/dataset/LJSpeech-1.1/TextGrid/LJSpeech/
+```
+
+### 3. Preprocess the full dataset
+This extracts pitch, energy, duration, and creates the phoneme‑level features (takes ~30 min on a CPU node):
+```bash
+python preprocessing.py
+```
+Make sure the config `drawspeech/utilities/preprocessor/preprocess_phoneme_level.yaml` points to the correct paths.
+
+### 4. Download checkpoints (if not already done)
+```bash
+bash download_checkpoints.sh
+```
+
+### 5. Run full test‑set inference with **original pitch as sketch**
+```bash
+# First create the inference JSON (adds the feature paths to test.json)
+python -c "
+import json
+with open('data/dataset/metadata/ljspeech/test.json') as f:
+    data = json.load(f)
+data['pitch'] = 'data/dataset/metadata/ljspeech/phoneme_level/pitch'
+data['energy'] = 'data/dataset/metadata/ljspeech/phoneme_level/energy'
+data['duration'] = 'data/dataset/metadata/ljspeech/phoneme_level/duration'
+with open('tests/inference_test.json', 'w') as f:
+    json.dump(data, f, indent=2)
+"
+
+# Run inference
+python drawspeech/infer.py \
+    --config_yaml drawspeech/config/drawspeech_ljspeech_22k.yaml \
+    --list_inference tests/inference_test.json \
+    --reload_from_ckpt data/checkpoints/drawspeech_fixed.ckpt
+```
+
+### 6. Compute RMSE for the full test set
+```bash
+LATEST_DIR=$(ls -dt log/latent_diffusion/config/drawspeech_ljspeech_22k/infer_* | head -1)
+python compute_rmse.py --generated_dir "$LATEST_DIR" --original_dir data/dataset/LJSpeech-1.1/wavs
+```
+
+### 7. Run cross‑utterance evaluation (paper's sketch condition, 300 files)
+Use the provided sbatch script `run_full_cross.sbatch` (after adjusting the GPU type and partition):
+```bash
+sbatch run_full_cross.sbatch
+```
+This will automatically generate cross‑utterance sketches, run inference, and print the average RMSE – matching the paper's 62 Hz result.
 
 ---
 
@@ -138,5 +191,4 @@ If you use this reproduction, please cite the original paper:
   year={2025},
   doi={10.1109/ICASSP49660.2025.10889767}
 }
-```
 ```
