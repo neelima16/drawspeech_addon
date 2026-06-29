@@ -23,6 +23,15 @@ else
     echo "taming-transformers already exists, skipping clone."
 fi
 
+echo "=== Downloading VGG LPIPS model (avoids hang during first inference) ==="
+mkdir -p taming/modules/autoencoder/lpips
+if [ ! -f taming/modules/autoencoder/lpips/vgg.pth ]; then
+    curl -L -o taming/modules/autoencoder/lpips/vgg.pth \
+      "https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1"
+else
+    echo "VGG model already present."
+fi
+
 echo "=== Fixing checkpoint key names ==="
 python fix_checkpoint.py
 
