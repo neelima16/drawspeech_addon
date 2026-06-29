@@ -109,13 +109,15 @@ Start the Streamlit app on the GPU node (as shown in your README).
 Open Terminal on your Mac.
 
 Create the SSH tunnel (replace tg090 with the actual GPU hostname and csnhr.nhr.fau.de with your login node):
-
+```
 bash
 ssh -L 8501:tg090:8501 iwi5408h@csnhr.nhr.fau.de
+```
 If port 8501 is already in use on your Mac, use a different local port, e.g.:
-
+```
 bash
 ssh -L 8502:tg090:8501 iwi5408h@csnhr.nhr.fau.de
+```
 Keep the Terminal window open.
 
 Open your browser and go to http://localhost:8501 (or http://localhost:8502 if you used the alternate port).
