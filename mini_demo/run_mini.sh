@@ -9,6 +9,10 @@ fi
 
 export PYTHONPATH=$(pwd):$(pwd)/taming-transformers:$PYTHONPATH
 
+# Ensure the mini-demo stats are accessible at the path expected by the config
+mkdir -p data/dataset/metadata/ljspeech/phoneme_level
+cp mini_demo/features/phoneme_level/stats.json data/dataset/metadata/ljspeech/phoneme_level/stats.json 2>/dev/null || true
+
 if [ ! -f data/checkpoints/drawspeech_fixed.ckpt ]; then
     echo "Fixed checkpoint not found. Run 'bash download_checkpoints.sh' first."
     exit 1
