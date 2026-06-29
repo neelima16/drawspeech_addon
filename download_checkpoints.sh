@@ -1,23 +1,38 @@
 #!/bin/bash
-# Download all required checkpoints and fix key names
-
 set -e
 
-echo "=== Downloading DrawSpeech checkpoints ==="
-mkdir -p data/checkpoints/LJ_V1
+# echo "=== Downloading DrawSpeech checkpoints ==="
+# mkdir -p data/checkpoints/LJ_V1
 
-pip install huggingface_hub -q
-python -c "
-from huggingface_hub import hf_hub_download
-hf_hub_download('HappyColor/DrawSpeech', 'vae.ckpt', local_dir='data/checkpoints')
-hf_hub_download('HappyColor/DrawSpeech', 'drawspeech.ckpt', local_dir='data/checkpoints')
-"
+# pip install huggingface_hub -q
+# python -c "
+# from huggingface_hub import hf_hub_download
+# hf_hub_download('HappyColor/DrawSpeech', 'vae.ckpt', local_dir='data/checkpoints')
+# hf_hub_download('HappyColor/DrawSpeech', 'drawspeech.ckpt', local_dir='data/checkpoints')
+# "
 
-echo "=== Downloading HiFi-GAN vocoder ==="
-wget -q https://raw.githubusercontent.com/jik876/hifi-gan/master/config_v1.json -O data/checkpoints/LJ_V1/config.json
-wget -q https://github.com/jik876/hifi-gan/releases/download/v1.0/generator_LJSpeech.pth.tar -O data/checkpoints/LJ_V1/generator_v1
+# echo "=== Downloading HiFi-GAN vocoder ==="
+# curl -L -o data/checkpoints/LJ_V1/config.json https://raw.githubusercontent.com/jik876/hifi-gan/master/config_v1.json
+# curl -L -o data/checkpoints/LJ_V1/generator_v1 "https://drive.usercontent.google.com/download?id=1qpgI41wNXFcH-iKq1Y42JlBC9j0je8PW&export=download"
 
-echo "=== Fixing checkpoint key names ==="
-python fix_checkpoint.py
+# echo "=== Cloning and installing taming-transformers ==="
+# if [ ! -d "taming-transformers" ]; then
+#     git clone https://github.com/CompVis/taming-transformers.git
+#     cd taming-transformers && pip install -e . && cd ..
+# else
+#     echo "taming-transformers already exists, skipping clone."
+# fi
+
+echo "=== Downloading VGG LPIPS model (avoids hang during first inference) ==="
+mkdir -p taming/modules/autoencoder/lpips
+if [ ! -f taming/modules/autoencoder/lpips/vgg.pth ]; then
+    curl -L -o taming/modules/autoencoder/lpips/vgg.pth \
+      "https://heibox.uni-heidelberg.de/f/607503859c864bc1b30b/?dl=1"
+else
+    echo "VGG model already present."
+fi
+
+# echo "=== Fixing checkpoint key names ==="
+# python fix_checkpoint.py
 
 echo "=== Done! ==="
